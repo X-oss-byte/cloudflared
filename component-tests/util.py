@@ -26,7 +26,8 @@ def fips_enabled():
     return env_fips is not None and env_fips != "0"
 
 nofips = pytest.mark.skipif(
-        fips_enabled(), reason=f"Only runs without FIPS (COMPONENT_TESTS_FIPS=0)")
+    fips_enabled(), reason="Only runs without FIPS (COMPONENT_TESTS_FIPS=0)"
+)
 
 def write_config(directory, config):
     config_path = directory / "config.yml"
@@ -123,7 +124,7 @@ def _log_cloudflared_logs(cfd_logs):
         log_file = os.path.join(cfd_logs, files[0])
     with open(log_file, "r") as f:
         LOGGER.warning("Cloudflared Tunnel was not ready:")
-        for line in f.readlines():
+        for line in f:
             LOGGER.warning(line)
 
 

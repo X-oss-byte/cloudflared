@@ -27,8 +27,7 @@ class TestManagement:
             return
         config = component_tests_config(cfd_mode=CfdModes.NAMED, run_proxy_dns=False, provide_ingress=False)
         LOGGER.debug(config)
-        headers = {}
-        headers["Content-Type"] = "application/json"
+        headers = {"Content-Type": "application/json"}
         config_path = write_config(tmp_path, config.full_config)
         with start_cloudflared(tmp_path, config, cfd_pre_args=["tunnel", "--ha-connections", "1", "--label" , "test"], cfd_args=["run", "--hello-world"], new_process=True):
             wait_tunnel_ready(tunnel_url=config.get_url(),
@@ -37,7 +36,7 @@ class TestManagement:
             connector_id = cfd_cli.get_connector_id(config)[0]
             url = cfd_cli.get_management_url("host_details", config, config_path)
             resp = send_request(url, headers=headers)
-            
+
             # Assert response json.
             assert resp.status_code == 200, "Expected cloudflared to return 200 for host details"
             assert resp.json()["hostname"] == "custom:test", "Expected cloudflared to return hostname"

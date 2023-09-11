@@ -64,7 +64,7 @@ class NamedTunnelConfig(NamedTunnelBaseConfig):
                            self.merge_config(additional_config))
 
     def get_url(self):
-        return "https://" + self.hostname
+        return f"https://{self.hostname}"
 
     def base_config(self):
         config = self.full_config.copy()

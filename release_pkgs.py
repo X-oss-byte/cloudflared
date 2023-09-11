@@ -133,7 +133,7 @@ class PkgCreator:
     """
 
     def create_repo_file(self, file_path, binary_name, baseurl, gpgkey_url):
-        with open(os.path.join(file_path, binary_name + '.repo'), "w+") as repo_file:
+        with open(os.path.join(file_path, f'{binary_name}.repo'), "w+") as repo_file:
             repo_file.write(f"[{binary_name}-stable]")
             repo_file.write(f"{binary_name}-stable")
             repo_file.write(f"baseurl={baseurl}/rpm")
@@ -288,7 +288,7 @@ def create_rpm_packaging(
         base_url,
         gpg_key_url,
 ):
-    print(f"creating rpm pkgs...")
+    print("creating rpm pkgs...")
     pkg_creator.create_rpm_pkgs(artifacts_path, gpg_key_name)
     pkg_creator.create_repo_file(artifacts_path, binary_name, base_url, gpg_key_url)
 
@@ -356,9 +356,7 @@ def parse_args():
             it is the caller's responsiblity to ensure that these debs are already present in a directory. This script\
             will not build binaries or create their debs."
     )
-    args = parser.parse_args()
-
-    return args
+    return parser.parse_args()
 
 
 if __name__ == "__main__":

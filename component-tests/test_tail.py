@@ -124,8 +124,8 @@ class TestTail:
             task = asyncio.ensure_future(start_streaming_to_be_remotely_closed(url))
             override_task = asyncio.ensure_future(start_streaming_override(url))
             await asyncio.wait([task, override_task])
-            assert task.exception() == None, task.exception()
-            assert override_task.exception() == None, override_task.exception()
+            assert task.exception() is None, task.exception()
+            assert override_task.exception() is None, override_task.exception()
 
 async def start_streaming_to_be_remotely_closed(url):
     async with connect(url, open_timeout=5, close_timeout=5) as websocket:
@@ -148,7 +148,7 @@ async def start_streaming_override(url):
 
 # Every http request has two log lines sent
 async def generate_and_validate_http_events(websocket: WebSocketClientProtocol, url: str, count_send: int):
-    for i in range(count_send):
+    for _ in range(count_send):
         send_request(url)
     # There are typically always two log lines for http requests (request and response)
     count = 0
@@ -170,7 +170,7 @@ async def generate_and_validate_no_log_event(websocket: WebSocketClientProtocol,
     try:
         # wait for 5 seconds and make sure we hit the timeout and not recv any events
         req_line = await asyncio.wait_for(websocket.recv(), 5)
-        assert req_line == None, "expected no logs for the specified filters"
+        assert req_line is None, "expected no logs for the specified filters"
     except asyncio.TimeoutError:
         pass
 
