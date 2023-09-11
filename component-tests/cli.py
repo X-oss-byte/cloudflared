@@ -13,17 +13,20 @@ class CloudflaredCli:
         self.basecmd = [config.cloudflared_binary, "tunnel"]
         if config_path is not None:
             self.basecmd += ["--config", str(config_path)]
-        origincert = get_config_from_file()["origincert"]
-        if origincert:
+        if origincert := get_config_from_file()["origincert"]:
             self.basecmd += ["--origincert", origincert]
         self.logger = logger
 
     def _run_command(self, subcmd, subcmd_name, needs_to_pass=True):
         cmd = self.basecmd + subcmd
-        # timeout limits the time a subprocess can run. This is useful to guard against running a tunnel when
-        # command/args are in wrong order.
-        result = run_subprocess(cmd, subcmd_name, self.logger, check=needs_to_pass, capture_output=True, timeout=15)
-        return result
+        return run_subprocess(
+            cmd,
+            subcmd_name,
+            self.logger,
+            check=needs_to_pass,
+            capture_output=True,
+            timeout=15,
+        )
 
     def list_tunnels(self):
         cmd_args = ["list", "--output", "json"]
@@ -34,8 +37,7 @@ class CloudflaredCli:
         basecmd = [config.cloudflared_binary]
         if config_path is not None:
             basecmd += ["--config", str(config_path)]
-        origincert = get_config_from_file()["origincert"]
-        if origincert:
+        if origincert := get_config_from_file()["origincert"]:
             basecmd += ["--origincert", origincert]
 
         cmd_args = ["tail", "token", config.get_tunnel_id()]
@@ -55,10 +57,7 @@ class CloudflaredCli:
 
     def get_connector_id(self, config): 
         op = self.get_tunnel_info(config.get_tunnel_id())
-        connectors = []
-        for conn in op["conns"]:
-            connectors.append(conn["id"])
-        return connectors
+        return [conn["id"] for conn in op["conns"]]
 
     def get_tunnel_info(self, tunnel_id):
         info = self._run_command(["info", "--output", "json", tunnel_id], "info")

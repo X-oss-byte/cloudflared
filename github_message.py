@@ -21,11 +21,16 @@ BASE_KV_URL = 'https://api.cloudflare.com/client/v4/accounts/'
 def kv_get_keys(prefix, account, namespace, api_token):
     """ get the KV keys for a given prefix """
     response = requests.get(
-        BASE_KV_URL + account + "/storage/kv/namespaces/" +
-        namespace + "/keys" + "?prefix=" + prefix,
+        BASE_KV_URL
+        + account
+        + "/storage/kv/namespaces/"
+        + namespace
+        + "/keys"
+        + "?prefix="
+        + prefix,
         headers={
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + api_token,
+            "Authorization": f"Bearer {api_token}",
         },
     )
     if response.status_code != 200:
@@ -39,10 +44,15 @@ def kv_get_keys(prefix, account, namespace, api_token):
 def kv_get_value(key, account, namespace, api_token):
     """ get the KV value for a provided key """
     response = requests.get(
-        BASE_KV_URL + account + "/storage/kv/namespaces/" + namespace + "/values/" + key,
+        BASE_KV_URL
+        + account
+        + "/storage/kv/namespaces/"
+        + namespace
+        + "/values/"
+        + key,
         headers={
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + api_token,
+            "Authorization": f"Bearer {api_token}",
         },
     )
     if response.status_code != 200:

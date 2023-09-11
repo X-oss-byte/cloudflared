@@ -18,7 +18,7 @@ class TestQuickTunnels:
         with start_cloudflared(tmp_path, config, cfd_pre_args=["tunnel", "--ha-connections", "1"], cfd_args=["--url", f"http://localhost:{METRICS_PORT}/"], new_process=True):
             wait_tunnel_ready(require_min_connections=1)
             url = get_quicktunnel_url()
-            send_requests(url+"/ready", 3, True)
+            send_requests(f"{url}/ready", 3, True)
 
     def test_quick_tunnel_proxy_dns_url(self, tmp_path, component_tests_config):
         config = component_tests_config(cfd_mode=CfdModes.QUICK, run_proxy_dns=True)

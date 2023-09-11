@@ -22,7 +22,7 @@ class TestTunnel:
         LOGGER.debug(config)
         with start_cloudflared(tmp_path, config, cfd_pre_args=["tunnel", "--ha-connections", "1"],  cfd_args=["run", "--url", f"http://localhost:{METRICS_PORT}/"], new_process=True):
             wait_tunnel_ready(require_min_connections=1)
-            send_requests(config.get_url()+"/ready", 3, True)
+            send_requests(f"{config.get_url()}/ready", 3, True)
 
     def test_tunnel_no_ingress(self, tmp_path, component_tests_config):
         '''
@@ -33,9 +33,9 @@ class TestTunnel:
         LOGGER.debug(config)
         with start_cloudflared(tmp_path, config, cfd_pre_args=["tunnel", "--ha-connections", "1"],  cfd_args=["run"], new_process=True):
             wait_tunnel_ready(require_min_connections=1)
-            resp = send_request(config.get_url()+"/")
+            resp = send_request(f"{config.get_url()}/")
             assert resp.status_code == 503, "Expected cloudflared to return 503 for all requests with no ingress defined"
-            resp = send_request(config.get_url()+"/test")
+            resp = send_request(f"{config.get_url()}/test")
             assert resp.status_code == 503, "Expected cloudflared to return 503 for all requests with no ingress defined"
 
 

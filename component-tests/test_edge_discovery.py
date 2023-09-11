@@ -87,8 +87,9 @@ class TestEdgeDiscovery:
                 (c for c in info["conns"] if c["id"] == connector_id), None)
             assert connector, f"Expected connection info from get tunnel info for the connected instance: {info}"
             conns = connector["conns"]
-            assert conns == None or len(
-                conns) == 4, f"There should be 4 connections registered: {conns}"
+            assert (
+                conns is None or len(conns) == 4
+            ), f"There should be 4 connections registered: {conns}"
             for conn in conns:
                 origin_ip = conn["origin_ip"]
                 assert origin_ip, f"No available origin_ip for this connection: {conn}"
@@ -142,11 +143,9 @@ class TestEdgeDiscovery:
         remote host with the provided address family to validate host support 
         for the provided address family.
         """
-        address = None
-        for a in self.get_addresses():
-            if a[0] == address_family:
-                address = a
-                break
+        address = next(
+            (a for a in self.get_addresses() if a[0] == address_family), None
+        )
         if address is None:
             # Couldn't even lookup the address family so we can't connect
             return False

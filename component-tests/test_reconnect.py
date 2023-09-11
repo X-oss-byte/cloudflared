@@ -25,7 +25,7 @@ class TestReconnect:
             "protocol": protocol,
         }
 
-    @pytest.mark.skipif(platform.system() == "Windows", reason=f"Currently buggy on Windows TUN-4584")
+    @pytest.mark.skipif(platform.system() == "Windows", reason="Currently buggy on Windows TUN-4584")
     @pytest.mark.parametrize("protocol", protocols())
     def test_named_reconnect(self, tmp_path, component_tests_config, protocol):
         config = component_tests_config(self._extra_config(protocol))
